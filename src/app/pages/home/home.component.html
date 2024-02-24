@@ -1,61 +1,63 @@
-<section class="todoapp">
-  <header class="header">
-    <div class="container">
-      <h1>Mi día🧃</h1>
-      <p>Todas tus tareas en un solo lugar</p>
-      <input
-        class="new-todo"
-        placeholder="Nueva tarea..."
-        autofocus
-        type="text"
-        [formControl]="newTaskCtrl"
-        (keydown.enter)="changeHandler()" />
-    </div>
-  </header>
-  <div class="container todoapp-wrapper">
-    <!-- <pre>
+<body>
+  <section class="todoapp">
+    <header class="header">
+      <div class="container">
+        <h1>Mi día🧃</h1>
+        <p>Todas tus tareas en un solo lugar</p>
+        <input
+          class="new-todo"
+          placeholder="Nueva tarea..."
+          autofocus
+          type="text"
+          [formControl]="newTaskCtrl"
+          (keydown.enter)="changeHandler()" />
+      </div>
+    </header>
+    <div class="container todoapp-wrapper">
+      <!-- <pre>
       <code>
         {{ tasks() | json }}
       </code>
     </pre> -->
-    <section class="main">
-      <ul class="todo-list">
+      <section class="main">
+        <ul class="todo-list">
 
-        <li (dblclick)="updateTaskEditingMode(i)"
-          *ngFor="let task of tasksByFilter(); index as i"
-          [class.editing]="task.editing"
-          [class.completed]="task.completed">
-          <div class="view">
-            <input class="toggle" type="checkbox" [checked]="task.completed"
-              (change)="updateTask(i)" />
-            <label>{{ task.title }}</label>
-            <button class="destroy" (click)="deleteTask(i)"></button>
-          </div>
-          <input class="edit" (keydown.enter)="updateTaskText(i, $event)"
-            [value]="task.title" />
-        </li>
+          <li (dblclick)="updateTaskEditingMode(i)"
+            *ngFor="let task of tasksByFilter(); index as i"
+            [class.editing]="task.editing"
+            [class.completed]="task.completed">
+            <div class="view">
+              <input class="toggle" type="checkbox" [checked]="task.completed"
+                (change)="updateTask(i)" />
+              <label>{{ task.title }}</label>
+              <button class="destroy" (click)="deleteTask(i)"></button>
+            </div>
+            <input class="edit" (keydown.enter)="updateTaskText(i, $event)"
+              [value]="task.title" />
+          </li>
 
-      </ul>
-    </section>
-    <footer class="footer">
-      <span class="todo-count"><strong>{{ tasksByFilter().length }}</strong>{{
-        tasks().length <= 1 ? " tarea" : " tareas" }} </span>
-      <ul class="filters">
-        <li>
-          <a (click)="changeFilter('all')"
-            [class.selected]="filter() === 'all'">Todas</a>
-        </li>
-        <li>
-          <a (click)="changeFilter('pending')"
-            [class.selected]="filter() === 'pending'">Pendientes</a>
-        </li>
-        <li>
-          <a (click)="changeFilter('completed')"
-            [class.selected]="filter() === 'completed'">Completadas</a>
-        </li>
-      </ul>
-      <button class="clear-completed"
-        (click)="clearCompletedTasks()">Limpiar</button>
-    </footer>
-  </div>
-</section>
+        </ul>
+      </section>
+      <footer class="footer">
+        <span class="todo-count"><strong>{{ tasksByFilter().length }}</strong>{{
+          tasks().length <= 1 ? " tarea" : " tareas" }} </span>
+        <ul class="filters">
+          <li>
+            <a (click)="changeFilter('all')"
+              [class.selected]="filter() === 'all'">Todas</a>
+          </li>
+          <li>
+            <a (click)="changeFilter('pending')"
+              [class.selected]="filter() === 'pending'">Pendientes</a>
+          </li>
+          <li>
+            <a (click)="changeFilter('completed')"
+              [class.selected]="filter() === 'completed'">Completadas</a>
+          </li>
+        </ul>
+        <button class="clear-completed"
+          (click)="clearCompletedTasks()">Limpiar</button>
+      </footer>
+    </div>
+  </section>
+</body>

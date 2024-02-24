@@ -34,6 +34,8 @@ export class HomeComponent {
     return tasks;
   });
 
+  editedTaskIndex: number | null = null;
+
   newTaskCtrl = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required],
@@ -50,6 +52,32 @@ export class HomeComponent {
       this.tasks.set(tasks);
     }
     this.trackTasks();
+    document.addEventListener('click', this.documentClickHandler.bind(this));
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('click', this.documentClickHandler.bind(this));
+  }
+
+  documentClickHandler(event: Event) {
+    const target = event.target as HTMLElement;
+
+    const isOutsideEditedTask = !target.closest('.editing');
+
+    if (isOutsideEditedTask && this.editedTaskIndex !== null) {
+      this.tasks.update((prevState) => {
+        return prevState.map((task, index) => {
+          if (index === this.editedTaskIndex) {
+            return {
+              ...task,
+              editing: false,
+            };
+          }
+          return task;
+        });
+      });
+      this.editedTaskIndex = null;
+    }
   }
 
   trackTasks() {
@@ -103,9 +131,10 @@ export class HomeComponent {
   }
 
   updateTaskEditingMode(index: number) {
+    this.editedTaskIndex = index;
     this.tasks.update((prevState) => {
       return prevState.map((task, position) => {
-        if (position === index) {
+        if (position === index && !task.completed) {
           return {
             ...task,
             editing: true,
