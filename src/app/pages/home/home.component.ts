@@ -141,4 +141,8 @@ export class HomeComponent {
   changeFilter(filter: 'all' | 'pending' | 'completed') {
     this.filter.set(filter);
   }
+
+  clearCompletedTasks() {
+    this.tasks.update((tasks) => tasks.filter((task) => !task.completed));
+  }
 }

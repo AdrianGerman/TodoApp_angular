@@ -54,7 +54,8 @@
             [class.selected]="filter() === 'completed'">Completadas</a>
         </li>
       </ul>
-      <button class="clear-completed">Limpiar</button>
+      <button class="clear-completed"
+        (click)="clearCompletedTasks()">Limpiar</button>
     </footer>
   </div>
 </section>
