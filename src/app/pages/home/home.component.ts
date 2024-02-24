@@ -1,4 +1,11 @@
-import { Component, signal, computed } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  effect,
+  inject,
+  Injector,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -12,30 +19,16 @@ import { Task } from './../../models/task.model';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  tasks = signal<Task[]>([
-    {
-      id: Date.now(),
-      title: 'Tomarme un matecito',
-      completed: false,
-    },
-    {
-      id: Date.now(),
-      title: 'Terminar el curso de Angular',
-      completed: false,
-    },
-    {
-      id: Date.now(),
-      title: 'Subir mis sprites',
-      completed: false,
-    },
-  ]);
+  tasks = signal<Task[]>([]);
 
   filter = signal<'all' | 'pending' | 'completed'>('all');
-
   tasksByFilter = computed(() => {
     const filter = this.filter();
     const tasks = this.tasks();
     if (filter === 'pending') {
+      return tasks.filter((task) => !task.completed);
+    }
+    if (filter === 'completed') {
       return tasks.filter((task) => task.completed);
     }
     return tasks;
@@ -46,7 +39,29 @@ export class HomeComponent {
     validators: [Validators.required],
   });
 
-  // Validators.pattern(/^\S*$/)
+  injector = inject(Injector);
+
+  constructor() {}
+
+  ngOnInit() {
+    const storage = localStorage.getItem('tasks');
+    if (storage) {
+      const tasks = JSON.parse(storage);
+      this.tasks.set(tasks);
+    }
+    this.trackTasks();
+  }
+
+  trackTasks() {
+    effect(
+      () => {
+        const tasks = this.tasks();
+        console.log(tasks);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      },
+      { injector: this.injector }
+    );
+  }
 
   changeHandler() {
     if (this.newTaskCtrl.valid) {
